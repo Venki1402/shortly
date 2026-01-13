@@ -4,58 +4,101 @@
 <head>
     <title>Shortly - URL Shortener</title>
 
-    <!-- Bootstrap CSS (CDN) -->
+    <!-- Bootstrap CSS -->
     <link
         href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css"
         rel="stylesheet"
-        integrity="sha384-VkTXQbN4Z1cdq9VHtV6nRvWmvMRGsiE232zraFMvx6bMpiKFF9volG/GpGhawl+5"
         crossorigin="anonymous"
     >
+
+    <style>
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .brand {
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        .subtitle {
+            color: #6c757d;
+            font-size: 0.95rem;
+        }
+
+        .result-box {
+            word-break: break-all;
+        }
+    </style>
 </head>
 
-<body class="bg-light">
+<body>
 
-<div class="container mt-5">
+<div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-lg-6 col-md-8">
 
-            <div class="card shadow-sm">
-                <div class="card-body">
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-4">
 
-                    <h2 class="text-center mb-4">Shortly</h2>
+                    <!-- Header -->
+                    <div class="text-center mb-4">
+                        <h2 class="brand">Shortly</h2>
+                        <p class="subtitle">
+                            Shorten long URLs into clean, shareable links
+                        </p>
+                    </div>
 
+                    <!-- Form -->
                     <form method="post" action="<%= request.getContextPath() %>/shorten">
                         <div class="mb-3">
-                            <label for="longUrl" class="form-label">Enter a long URL</label>
-                            <input type="url"
-                                   class="form-control"
-                                   id="longUrl"
-                                   name="longUrl"
-                                   placeholder="https://example.com/some/very/long/url"
-                                   required>
+                            <label for="longUrl" class="form-label fw-semibold">
+                                Long URL
+                            </label>
+                            <input
+                                type="url"
+                                class="form-control form-control-lg"
+                                id="longUrl"
+                                name="longUrl"
+                                placeholder="https://example.com/some/very/long/url"
+                                required
+                            >
                         </div>
 
-                        <button type="submit" class="btn btn-primary w-100">
+                        <button
+                            type="submit"
+                            class="btn btn-primary btn-lg w-100">
                             Shorten URL
                         </button>
                     </form>
 
+                    <!-- Error -->
                     <% if (request.getAttribute("error") != null) { %>
-                        <div class="alert alert-danger mt-3">
+                        <div class="alert alert-danger mt-4 mb-0">
                             <%= request.getAttribute("error") %>
                         </div>
                     <% } %>
 
+                    <!-- Result -->
                     <% if (request.getAttribute("shortUrl") != null) { %>
-                        <div class="alert alert-success mt-3">
-                            Short URL:
-                            <a href="<%= request.getAttribute("shortUrl") %>" target="_blank">
+                        <div class="alert alert-success mt-4 mb-0 result-box">
+                            <div class="fw-semibold mb-1">Your short URL</div>
+                            <a href="<%= request.getAttribute("shortUrl") %>"
+                               target="_blank">
                                 <%= request.getAttribute("shortUrl") %>
                             </a>
                         </div>
                     <% } %>
 
                 </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="text-center mt-3 small text-muted">
+                Designed and developed by <a href="https://github.com/venki1402" target="_blank">Venkatesh Alampally</a>
             </div>
 
         </div>

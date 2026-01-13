@@ -30,7 +30,7 @@ public class ShortenServlet extends HttpServlet {
 
             String shortUrl = request.getRequestURL()
                     .toString()
-                    .replace("/shorten", "/" + shortCode);
+                    .replace("/shorten", "/r/" + shortCode);
 
             request.setAttribute("shortUrl", shortUrl);
 

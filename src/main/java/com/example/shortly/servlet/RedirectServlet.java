@@ -13,7 +13,7 @@ import java.util.Optional;
 /**
  * Handles redirection from short URL to original URL.
  */
-@WebServlet(name = "RedirectServlet", urlPatterns = "/*")
+@WebServlet(name = "RedirectServlet", urlPatterns = "/r/*")
 public class RedirectServlet extends HttpServlet {
 
     private final UrlService urlService = new UrlService();
