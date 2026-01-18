@@ -1,0 +1,77 @@
+name: CD
+
+on:
+  workflow_run:
+    workflows: ["CI"]
+    types:
+      - completed
+
+jobs:
+  cd-pipeline:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      # ----------------------------------------------------
+      # 1. Checkout repository (K8s manifests)
+      # ----------------------------------------------------
+      - name: Checkout source code
+        uses: actions/checkout@v4
+
+      # ----------------------------------------------------
+      # 2. Install kubectl
+      # ----------------------------------------------------
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: "v1.29.0"
+
+      # ----------------------------------------------------
+      # 3. Setup Kind (Kubernetes in Docker)
+      # ----------------------------------------------------
+      - name: Setup Kind cluster
+        uses: helm/kind-action@v1
+        with:
+          cluster_name: shortly-cluster
+
+      # ----------------------------------------------------
+      # 4. Verify cluster
+      # ----------------------------------------------------
+      - name: Verify Kubernetes cluster
+        run: kubectl get nodes
+
+      # ----------------------------------------------------
+      # 5. Replace Docker image dynamically
+      # ----------------------------------------------------
+      - name: Inject Docker image into manifests
+        run: |
+          sed -i 's|DOCKERHUB_USERNAME/shortly:latest|venki1402/shortly:latest|g' k8s/deployment.yml
+
+      # ----------------------------------------------------
+      # 6. Deploy application to Kubernetes
+      # ----------------------------------------------------
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
+      # ----------------------------------------------------
+      # 7. Wait for rollout
+      # ----------------------------------------------------
+      - name: Wait for deployment rollout
+        run: kubectl rollout status deployment/shortly-deployment --timeout=120s
+
+      # ----------------------------------------------------
+      # 8. Runtime Validation (Health Check)
+      # ----------------------------------------------------
+      - name: Runtime smoke test
+        run: |
+          sleep 20
+          curl -f http://localhost:30080/health
+
+      # ----------------------------------------------------
+      # 9. Dummy DAST (Basic Runtime Abuse Test)
+      # ----------------------------------------------------
+      - name: Dummy DAST test
+        run: |
+          curl -X POST http://localhost:30080/shorten -d "invalid_url_input" || true
