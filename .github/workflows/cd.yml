@@ -5,6 +5,7 @@ on:
     workflows: ["CI"]
     types:
       - completed
+  workflow_dispatch:
 
 jobs:
   cd-pipeline:
@@ -66,12 +67,13 @@ jobs:
       # ----------------------------------------------------
       - name: Runtime smoke test
         run: |
-          sleep 20
-          curl -f http://localhost:30080/health
+          kubectl port-forward service/shortly-service 8080:8080 &
+          sleep 10
+          curl -f http://localhost:8080/health
 
       # ----------------------------------------------------
       # 9. Dummy DAST (Basic Runtime Abuse Test)
       # ----------------------------------------------------
       - name: Dummy DAST test
         run: |
-          curl -X POST http://localhost:30080/shorten -d "invalid_url_input" || true
+          curl -X POST http://localhost:8080/shorten -d "invalid_url_input" || true
