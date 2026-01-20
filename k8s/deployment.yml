@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: shortly
-          image: DOCKERHUB_USERNAME/shortly:latest
+          image: venki1402/shortly:latest
           imagePullPolicy: Always
           ports:
             - containerPort: 8080
