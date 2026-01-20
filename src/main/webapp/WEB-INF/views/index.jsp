@@ -98,7 +98,7 @@
 
             <!-- Footer -->
             <div class="text-center mt-3 small text-muted">
-                Designed and developed by <a href="https://github.com/venki1402" target="_blank">Venkatesh Alampally</a>
+                Designed and developed by <a href="https://x.com/venkitwt" target="_blank">Venkatesh Alampally</a>
             </div>
 
         </div>
