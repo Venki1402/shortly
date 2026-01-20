@@ -1,0 +1,25 @@
+name: CD (self-hosted → kubeadm)
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Sanity check runner
+        run: |
+          uname -a
+          kubectl get nodes
+
+      - name: Deploy to Kubernetes
+        run: |
+          kubectl apply -f k8s/deployment.yml
+          kubectl apply -f k8s/service.yml
+
+      - name: Wait for rollout
+        run: kubectl rollout status deployment/shortly-deployment
