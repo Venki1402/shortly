@@ -84,12 +84,7 @@ jobs:
 
     - name: Build Docker Image (multi-arch)
       run: |
-        docker buildx build \
-          --platform linux/amd64,linux/arm64 \
-          -t ${{ secrets.DOCKERHUB_USERNAME }}/shortly:latest \
-          --load \
-          .
-
+        docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/shortly:latest .
 
     # ----------------------------------------------------
     # 9. Trivy – Container Image Security Scan
